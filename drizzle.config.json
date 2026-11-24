@@ -2,6 +2,6 @@
   "dialect": "postgresql",
   "schema": "./src/db/schema.ts",
   "dbCredentials": {
-    "url": "postgresql://postgres:postgres@127.0.0.1:5432/app_db"
+    "url": "postgresql://hari:vgbOuQM5JxOW9XbTzIbG564IuQJH7M12@dpg-dc2h9o97lnhs73efpdug-a/hari_db_ytjj"
   }
 }
