@@ -1,0 +1,33 @@
+# MARKET MASTER — Render blueprint (one-click deploy)
+# Deploy: Render dashboard → New → Blueprint → select this repo.
+# The database resource provisions Postgres and injects DATABASE_URL.
+databases:
+  - name: market-master-db
+    databaseName: app_db
+    user: marketmaster
+    plan: starter
+
+services:
+  - type: web
+    name: market-master
+    runtime: node
+    plan: starter              # starter avoids cold-start spin-down
+    region: singapore          # closest to NSE / Upstox infrastructure
+    buildCommand: npm install && npx next typegen && npm run build
+    startCommand: npx drizzle-kit push && npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    numInstances: 1            # single instance for in-memory token store
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"
+      - key: PORT
+        value: "3000"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: market-master-db
+          property: connectionString
+    # The Upstox access token is entered in the UI at runtime, validated
+    # server-side and held in process memory only — no secret is configured here.
